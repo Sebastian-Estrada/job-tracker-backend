@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class UserLoginAPIView(APIView):
     def post(self, request, *args, **kargs):
         serializer = UserLoginSerializer(data=request.data)
-        print(serializer.is_valid(), request.data)
+
         if serializer.is_valid():
             response = {
                 "username": {

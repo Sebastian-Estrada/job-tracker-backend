@@ -50,7 +50,8 @@ The Job Tracker is a web application designed to help users manage their job app
 
 4. **Set up the PostgreSQL database:**
     - Create a new PostgreSQL database and user.
-    - Update the `DATABASES` setting in `settings.py` with your database credentials.
+    - Create a `.env` file and add the necessary environment variables.
+    - Update the `DATABASES` setting in `.env` with your database credentials.
 
 5. **Run database migrations:**
     ```bash
