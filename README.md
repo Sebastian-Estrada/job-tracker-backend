@@ -31,6 +31,28 @@ The Job Tracker is a web application designed to help users manage their job app
 
 ### Steps
 
+### Configuration of env
+
+1. **Configure the environment variables:**
+
+Create a `.env` file in the root directory of your project and add the following environment variables:
+
+    # Security
+    SECRET_KEY=secret_key
+    DEBUG=True
+    # Database
+    DB_NAME=db_name
+    DB_USER=postgres
+    DB_PASSWORD=password
+    DB_HOST=host.docker.internal
+    DB_PORT=5432
+    # Django Settings
+    ALLOWED_HOSTS=localhost,127.0.0.1, job-tracker-backend, job-tracker-frontend
+    # Other settings
+    CORS_ALLOWED_ORIGINS=http://job-tracker-frontend:5173
+
+### Configuration of project
+
 1. **Clone the repository:**
     ```bash
     git clone https://github.com/yourusername/job_tracker.git
@@ -63,15 +85,20 @@ The Job Tracker is a web application designed to help users manage their job app
     python manage.py runserver
     ```
 
-7. **Run the application using Docker:**
+7. **Build the Docker image for the backend:**
     ```bash
-    docker-compose up --build
+    docker build -f Docker/Dockerfile -t job-tracker-backend .
     ```
 
-8. **Run tests:**
+8. **Run the application using Docker:**
+    ```bash
+    docker compose -f .\Docker\docker-compose.yaml up
+    ```
+
+9. **Run tests:**
     ```bash
     pytest
     ```
 
-Now, you should be able to access the application at `http://localhost:8000`.
+Now, you should be able to access the application at `http://localhost:8080`.
 
