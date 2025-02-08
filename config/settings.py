@@ -30,8 +30,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "job-tracker-backend", "job-tracker-frontend"]
-CORS_ALLOWED_ORIGINS = ["http://localhost:8000"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "job-tracker-backend", "job-tracker-frontend", "frontend"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://frontend"]
 
 
 # Application definition
