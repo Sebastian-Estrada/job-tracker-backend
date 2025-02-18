@@ -30,9 +30,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "job-tracker-backend", "job-tracker-frontend", "frontend"]
-CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://frontend"]
-
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend.default.svc.cluster.local", "job-tracker-frontend", "frontend", "a4893a706155f4765b899d904fda09f2-1744870452.ca-central-1.elb.amazonaws.com"]
+# CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://frontend", "http://frontend.default.svc.cluster.local"]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 

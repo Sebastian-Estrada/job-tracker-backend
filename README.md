@@ -102,7 +102,7 @@ Create a `.env` file in the root directory of your project and add the following
 
 Now, you should be able to access the application at `http://localhost:8080`.
 
-docker build -t backend .
+docker build -f Docker/Dockerfile -t backend .
 docker tag backend:latest 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
 aws ecr get-login-password --region ca-central-1 --profile personal-account | docker login --username AWS --password-stdin 732978450718.dkr.ecr.ca-central-1.amazonaws.com
 docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest

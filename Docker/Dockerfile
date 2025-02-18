@@ -21,14 +21,9 @@ COPY .  /var/www/html/job-tracker-backend
 # Set the working directory
 WORKDIR /var/www/html/job-tracker-backend
 # Collect static files
-RUN python manage.py collectstatic
+# RUN python manage.py collectstatic
 
 # Prepare configuration files
-# RUN cp ./nginx/000-backend.conf /etc/nginx/sites-enabled/ && \ 
-# cp ./nginx/proxy_params /etc/nginx/ && \ 
-# cp ./nginx/wsgi_params /etc/nginx/ && \ 
-# cp ./nginx/nginx.conf /etc/nginx/ && \
-# rm -f /etc/nginx/sites-enabled/default && \
 RUN sed -i -e 's/\r$//' ./Docker/entrypoint.sh && \
 chmod +x ./Docker/entrypoint.sh && \
 chmod +x manage.py
