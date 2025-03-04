@@ -102,7 +102,41 @@ Create a `.env` file in the root directory of your project and add the following
 
 Now, you should be able to access the application at `http://localhost:8080`.
 
-docker build -f Docker/Dockerfile -t backend .
+## Docker and AWS ECR Deployment Instructions
+
+This section provides the steps to build, tag, and push a Docker image to AWS Elastic Container Registry (ECR).
+
+1. **Build the Docker Image**:
+    - Use the Dockerfile located in the `Docker` directory to build the Docker image.
+    - Tag the image as `backend`.
+
+    ```sh
+    docker build -f Docker/Dockerfile -t backend .
+    ```
+
+2. **Tag the Docker Image**:
+    - Tag the Docker image with the ECR repository URI.
+
+    ```sh
+    docker tag backend:latest 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
+    ```
+
+3. **Authenticate Docker to AWS ECR**:
+    - Use the AWS CLI to get the ECR login password and authenticate Docker to your ECR registry.
+    - Ensure you are using the correct AWS profile and region.
+
+    ```sh
+    aws ecr get-login-password --region ca-central-1 --profile personal-account | docker login --username AWS --password-stdin 732978450718.dkr.ecr.ca-central-1.amazonaws.com
+    ```
+
+4. **Push the Docker Image to ECR**:
+    - Push the tagged Docker image to the specified ECR repository.
+
+    ```sh
+    docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
+    ```
+
+<!-- docker build -f Docker/Dockerfile -t backend .
 docker tag backend:latest 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
 aws ecr get-login-password --region ca-central-1 --profile personal-account | docker login --username AWS --password-stdin 732978450718.dkr.ecr.ca-central-1.amazonaws.com
-docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
+docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest -->
