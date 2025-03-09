@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend.default.svc.cluster.local", "job-tracker-frontend", "frontend", "a4893a706155f4765b899d904fda09f2-1744870452.ca-central-1.elb.amazonaws.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend.default.svc.cluster.local", "job-tracker-frontend", "frontend", "a28e214a6dddf4e87865491a4c40e076-1445085037.ca-central-1.elb.amazonaws.com"]
 # CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://frontend", "http://frontend.default.svc.cluster.local"]
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -172,3 +172,32 @@ REST_FRAMEWORK = {
 #         'rest_framework.permissions.AllowAny',
 #     ],
 # }
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+def ignore_csrf_breadcrumb(crumb, hint):
+    # Ignore breadcrumbs from CsrfViewMiddleware
+    if 'django.middleware.csrf.CsrfViewMiddleware' in crumb.get('category', ''):
+        return None
+    else:
+        return crumb
+
+if DEBUG is False:
+    sentry_sdk.init(
+        dsn="https://ff1db549a07c592554824fadd3bd061e@o4508948343685120.ingest.us.sentry.io/4508948344602624",
+        integrations=[
+            DjangoIntegration(),
+        ],
+
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+        before_breadcrumb=ignore_csrf_breadcrumb
+    )

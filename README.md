@@ -136,7 +136,7 @@ This section provides the steps to build, tag, and push a Docker image to AWS El
     docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
     ```
 
-<!-- docker build -f Docker/Dockerfile -t backend .
+docker build -f Docker/Dockerfile -t backend .
 docker tag backend:latest 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
 aws ecr get-login-password --region ca-central-1 --profile personal-account | docker login --username AWS --password-stdin 732978450718.dkr.ecr.ca-central-1.amazonaws.com
-docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest -->
+docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
