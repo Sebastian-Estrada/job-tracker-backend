@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from applications.models import Company
+from apps.applications.models import Company
 from faker import Faker
 
 class Command(BaseCommand):
