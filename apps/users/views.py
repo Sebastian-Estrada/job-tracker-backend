@@ -55,3 +55,7 @@ class LogoutView(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=204)
+
+
+def trigger_error(request):
+    division_by_zero = 1 / 0

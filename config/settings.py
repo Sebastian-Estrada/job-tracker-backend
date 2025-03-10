@@ -172,3 +172,32 @@ REST_FRAMEWORK = {
 #         'rest_framework.permissions.AllowAny',
 #     ],
 # }
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+def ignore_csrf_breadcrumb(crumb, hint):
+    # Ignore breadcrumbs from CsrfViewMiddleware
+    if 'django.middleware.csrf.CsrfViewMiddleware' in crumb.get('category', ''):
+        return None
+    else:
+        return crumb
+
+if DEBUG is False:
+    sentry_sdk.init(
+        dsn="https://ff1db549a07c592554824fadd3bd061e@o4508948343685120.ingest.us.sentry.io/4508948344602624",
+        integrations=[
+            DjangoIntegration(),
+        ],
+
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+        before_breadcrumb=ignore_csrf_breadcrumb
+    )
