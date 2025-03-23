@@ -1,0 +1,17 @@
+services:
+  backend:
+    image: sebasnates/job-tracker-backend
+    deploy:
+      replicas: 2
+    ports:
+      - "8080:8080"
+    
+
+  frontend:
+    image: sebasnates/job-tracker-frontend
+    deploy:
+      replicas: 2
+    ports:
+      - "8000:80"
+    depends_on:
+      - job-tracker-backend
