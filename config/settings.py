@@ -10,11 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import environ
 
 from pathlib import Path
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+ROOT_DIR = environ.Path(__file__) - 2
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -28,9 +30,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS').split(',')
-
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend.default.svc.cluster.local", "job-tracker-frontend", "frontend", "a7b8a6c403636456a8608bd3d0f29e40-1372292085.ca-central-1.elb.amazonaws.com"]
+# CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://frontend", "http://frontend.default.svc.cluster.local"]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -142,7 +144,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'apps/static')
+
+STATIC_ROOT = str(ROOT_DIR('../staticfiles'))
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'apps/media')
@@ -169,3 +172,32 @@ REST_FRAMEWORK = {
 #         'rest_framework.permissions.AllowAny',
 #     ],
 # }
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+def ignore_csrf_breadcrumb(crumb, hint):
+    # Ignore breadcrumbs from CsrfViewMiddleware
+    if 'django.middleware.csrf.CsrfViewMiddleware' in crumb.get('category', ''):
+        return None
+    else:
+        return crumb
+
+if DEBUG is False:
+    sentry_sdk.init(
+        dsn="https://ff1db549a07c592554824fadd3bd061e@o4508948343685120.ingest.us.sentry.io/4508948344602624",
+        integrations=[
+            DjangoIntegration(),
+        ],
+
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+        before_breadcrumb=ignore_csrf_breadcrumb
+    )

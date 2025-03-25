@@ -31,6 +31,28 @@ The Job Tracker is a web application designed to help users manage their job app
 
 ### Steps
 
+### Configuration of env
+
+1. **Configure the environment variables:**
+
+Create a `.env` file in the root directory of your project and add the following environment variables:
+
+    # Security
+    SECRET_KEY=secret_key
+    DEBUG=True
+    # Database
+    DB_NAME=db_name
+    DB_USER=postgres
+    DB_PASSWORD=password
+    DB_HOST=host.docker.internal
+    DB_PORT=5432
+    # Django Settings
+    ALLOWED_HOSTS=localhost,127.0.0.1, job-tracker-backend, job-tracker-frontend
+    # Other settings
+    CORS_ALLOWED_ORIGINS=http://job-tracker-frontend:5173
+
+### Configuration of project
+
 1. **Clone the repository:**
     ```bash
     git clone https://github.com/yourusername/job_tracker.git
@@ -50,7 +72,8 @@ The Job Tracker is a web application designed to help users manage their job app
 
 4. **Set up the PostgreSQL database:**
     - Create a new PostgreSQL database and user.
-    - Update the `DATABASES` setting in `settings.py` with your database credentials.
+    - Create a `.env` file and add the necessary environment variables.
+    - Update the `DATABASES` setting in `.env` with your database credentials.
 
 5. **Run database migrations:**
     ```bash
@@ -62,15 +85,60 @@ The Job Tracker is a web application designed to help users manage their job app
     python manage.py runserver
     ```
 
-7. **Run the application using Docker:**
+7. **Build the Docker image for the backend:**
     ```bash
-    docker-compose up --build
+    docker build -f Docker/Dockerfile -t job-tracker-backend .
     ```
 
-8. **Run tests:**
+8. **Run the application using Docker:**
+    ```bash
+    docker compose -f .\Docker\docker-compose.yaml up
+    ```
+
+9. **Run tests:**
     ```bash
     pytest
     ```
 
-Now, you should be able to access the application at `http://localhost:8000`.
+Now, you should be able to access the application at `http://localhost:8080`.
 
+## Docker and AWS ECR Deployment Instructions
+
+This section provides the steps to build, tag, and push a Docker image to AWS Elastic Container Registry (ECR).
+
+1. **Build the Docker Image**:
+    - Use the Dockerfile located in the `Docker` directory to build the Docker image.
+    - Tag the image as `backend`.
+
+    ```sh
+    docker build -f Docker/Dockerfile -t backend .
+    ```
+
+2. **Tag the Docker Image**:
+    - Tag the Docker image with the ECR repository URI.
+
+    ```sh
+    docker tag backend:latest 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
+    ```
+
+3. **Authenticate Docker to AWS ECR**:
+    - Use the AWS CLI to get the ECR login password and authenticate Docker to your ECR registry.
+    - Ensure you are using the correct AWS profile and region.
+
+    ```sh
+    aws ecr get-login-password --region ca-central-1 --profile personal-account | docker login --username AWS --password-stdin 732978450718.dkr.ecr.ca-central-1.amazonaws.com
+    ```
+
+4. **Push the Docker Image to ECR**:
+    - Push the tagged Docker image to the specified ECR repository.
+
+    ```sh
+    docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
+    ```
+
+docker build -f Docker/Dockerfile -t job-tracker-backend .
+docker tag job-tracker-backend:latest sebasnates/job-tracker-backend:latest
+docker push sebasnates/job-tracker-backend:latest
+docker tag backend:latest 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest
+aws ecr get-login-password --region ca-central-1 --profile personal-account | docker login --username AWS --password-stdin 732978450718.dkr.ecr.ca-central-1.amazonaws.com
+docker push 732978450718.dkr.ecr.ca-central-1.amazonaws.com/backend:latest

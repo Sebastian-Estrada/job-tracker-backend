@@ -70,7 +70,6 @@ class JobPositionSerializer(serializers.ModelSerializer):
         instance.application_deadline = validated_data.get('application_deadline', instance.application_deadline)
         instance.description = validated_data.get('description', instance.description)
         instance.save()
-        instance.save()
         return instance
 
 class JobApplicationSerializer(serializers.ModelSerializer):

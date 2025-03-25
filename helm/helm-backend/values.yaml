@@ -1,0 +1,32 @@
+serviceAccount:
+  create: true
+  name: backend-sa
+
+image:
+  repository: sebasnates/job-tracker-backend   # Docker image for the backend
+  tag: latest                                  # Use the latest tag
+  pullPolicy: Always                     # Avoid pulling the image if it's already present
+
+ingress:
+  enabled: false  # Set to false if you don't need ingress
+
+autoscaling:
+  enabled: false  # Set to true if you want HPA
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+replicaCount: 2                                # Number of replicas for the backend
+
+service:
+  type: ClusterIP                              # Internal service, as backend only needs to be accessed within the cluster
+  port: 8080                                   # Kubernetes service port for backend
+  targetPort: 8080                             # Container port inside the pod (where the backend listens)
+
+resources:
+  requests:
+    memory: "256Mi"                            # Request 256Mi of memory for the backend container
+    cpu: "250m"                                # Request 250 milli-CPU for the backend container
+  limits:
+    memory: "512Mi"                            # Limit the memory usage to 512Mi
+    cpu: "500m"                                # Limit the CPU usage to 500 milli-CPU

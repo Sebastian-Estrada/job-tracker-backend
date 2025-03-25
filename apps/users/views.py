@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from rest_framework import generics, permissions, viewsets
 from rest_framework.authtoken.models import Token
@@ -23,16 +24,15 @@ class UserViewSet(viewsets.ModelViewSet):
 class UserLoginAPIView(APIView):
     def post(self, request, *args, **kargs):
         serializer = UserLoginSerializer(data=request.data)
-        print(serializer.is_valid(), request.data)
-        if serializer.is_valid():
-            response = {
-                "username": {
-                    "detail": "User Doesnot exist!"
-                }
-            }
 
-            if User.objects.filter(username=request.data['username']).exists():
-                user = User.objects.get(username=request.data['username'])
+        if serializer.is_valid():
+            username = request.data.get('username')
+            password = request.data.get('password')
+
+            # Try to authenticate the user
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
                 token, created = Token.objects.get_or_create(user=user)
                 response = {
                     'success': True,
@@ -41,7 +41,11 @@ class UserLoginAPIView(APIView):
                     'token': token.key
                 }
                 return Response(response, status=status.HTTP_200_OK)
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                response = {
+                    "detail": "Invalid username or password!"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Logout (Eliminación del Token)
@@ -51,3 +55,7 @@ class LogoutView(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=204)
+
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
