@@ -19,6 +19,7 @@ aws eks create-nodegroup --cluster-name job-tracker-cluster \
 aws eks update-kubeconfig --region ca-central-1 --name job-tracker-cluster \
   --profile personal-account
 
+
 helm upgrade --install backend ./
 
 helm list --all-namespaces  # List all Helm releases
@@ -35,6 +36,6 @@ kubectl delete all --all -A  # Delete everything in all namespaces
 
 aws eks delete-cluster --name job-tracker-cluster --region ca-central-1 --profile personal-account
 
-aws eks list-nodegroups --cluster-name job-tracker-cluster --profile personal-account
-aws eks delete-nodegroup --cluster-name job-tracker-cluster --nodegroup-name eks-nodes --profile personal-account
+aws eks list-nodegroups --cluster-name job-tracker-cluster --profile personal-account --region ca-central-1
+aws eks delete-nodegroup --cluster-name job-tracker-cluster --region ca-central-1 --nodegroup-name eks-nodes --profile personal-account
 
