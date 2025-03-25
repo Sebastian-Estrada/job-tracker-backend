@@ -5,7 +5,7 @@ serviceAccount:
 image:
   repository: sebasnates/job-tracker-backend   # Docker image for the backend
   tag: latest                                  # Use the latest tag
-  pullPolicy: IfNotPresent                     # Avoid pulling the image if it's already present
+  pullPolicy: Always                     # Avoid pulling the image if it's already present
 
 ingress:
   enabled: false  # Set to false if you don't need ingress
