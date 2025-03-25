@@ -5,6 +5,7 @@ if [ "$1" = "runapp" ]; then
     echo "Running migrations..."
     python manage.py makemigrations
     python manage.py migrate
+    python manage.py data_loading
 
     echo "Checking for superuser existence and creating if not found..."
     python manage.py shell <<EOF
@@ -13,7 +14,6 @@ User = get_user_model()
 if not User.objects.filter(username='admin').exists():
     User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword')
 EOF
-    python manage.py data_loading
     echo "Starting Gunicorn..."
     exec gunicorn config.wsgi:application --bind 0.0.0.0:8080 --workers 3 --timeout 300 --log-level debug
 else
