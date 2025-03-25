@@ -1,9 +1,20 @@
-# Backend values.yaml
+serviceAccount:
+  create: true
+  name: backend-sa
+
 image:
   repository: sebasnates/job-tracker-backend   # Docker image for the backend
   tag: latest                                  # Use the latest tag
   pullPolicy: IfNotPresent                     # Avoid pulling the image if it's already present
 
+ingress:
+  enabled: false  # Set to false if you don't need ingress
+
+autoscaling:
+  enabled: false  # Set to true if you want HPA
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
 
 replicaCount: 2                                # Number of replicas for the backend
 
