@@ -40,8 +40,6 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
         job_description = job_position.job_description
 
         if job_description:
-            resume_text = request.data.get('resume', '')
-            cover_letter_text = request.data.get('cover_letter', '')
             response_data = serializer.data
         else:
             response_data = serializer.data
