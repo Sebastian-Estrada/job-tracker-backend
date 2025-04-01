@@ -73,6 +73,10 @@ class JobPositionSerializer(serializers.ModelSerializer):
         return instance
 
 class JobApplicationSerializer(serializers.ModelSerializer):
+    job_position = serializers.CharField(source='job_position.title')  # Adjust 'name' to the actual field in the related model
+    status = serializers.CharField(source='status.status')  # Adjust 'name' to the actual field in the related model
+
+    # If you want to include other related fields, make sure to adjust similarly
     class Meta:
         model = JobApplication
         fields = ['id', 'job_position', 'application_date', 'status', 'resume', 'cover_letter', 'notes']
